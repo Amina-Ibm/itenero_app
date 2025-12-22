@@ -1,0 +1,44 @@
+services:
+  # Development services
+  postgres:
+    image: pgvector/pgvector:pg16
+    ports:
+      - "8090:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_DB: itenero_app
+      POSTGRES_PASSWORD: "IS5iEqV7JC72IYKW1CKnu9wViOHjLadr"
+    volumes:
+      - itenero_app_data:/var/lib/postgresql/data
+
+  redis:
+    image: redis:6.2.6
+    ports:
+      - "8091:6379"
+    command: redis-server --requirepass "wVx4Q8ATpDXYvJFe4UqKFCLZuOJpC7KT"
+    environment:
+      - REDIS_REPLICATION_MODE=master
+
+  # Test services
+  postgres_test:
+    image: pgvector/pgvector:pg16
+    ports:
+      - "9090:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_DB: itenero_app_test
+      POSTGRES_PASSWORD: "AFQ9EK2n6N-pPE3ufkwfh4J7CppaOV0v"
+    volumes:
+      - itenero_app_test_data:/var/lib/postgresql/data
+
+  redis_test:
+    image: redis:6.2.6
+    ports:
+      - "9091:6379"
+    command: redis-server --requirepass "2okP952IL8hkiYzQM46cRPR9in_efyFx"
+    environment:
+      - REDIS_REPLICATION_MODE=master
+
+volumes:
+  itenero_app_data:
+  itenero_app_test_data:
