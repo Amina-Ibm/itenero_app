@@ -1,0 +1,8 @@
+class: TripDay
+table: trip_day
+fields:
+  id: int?
+  tripId: int
+  dayIndex: int        # 1..N
+  date: DateTime?
+  summary: String?

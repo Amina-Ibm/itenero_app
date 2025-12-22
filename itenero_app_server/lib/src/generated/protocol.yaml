@@ -8,5 +8,8 @@ emailIdp:
   - finishPasswordReset:
 jwtRefresh:
   - refreshAccessToken:
+trip:
+  - createTrip:
+  - listTrips:
 greeting:
   - hello:

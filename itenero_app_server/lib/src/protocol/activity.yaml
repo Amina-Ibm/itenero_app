@@ -1,0 +1,14 @@
+class: Activity
+table: activity
+fields:
+  id: int?
+  tripDayId: int
+  title: String
+  description: String
+  category: String       # sightseeing, food, hotel, airport, etc.
+  startTime: DateTime?
+  endTime: DateTime?
+  locationName: String?
+  lat: double?
+  lon: double?
+  estimatedCost: double?

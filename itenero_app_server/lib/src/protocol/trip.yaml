@@ -1,0 +1,11 @@
+class: Trip
+table: trip
+fields:
+  id: int?
+  userId: String?
+  destination: String
+  daysCount: int
+  focus: String        # adventure, nature, etc.
+  travelersType: String  # adults, kids, family
+  budget: String?
+  createdAt: DateTime
