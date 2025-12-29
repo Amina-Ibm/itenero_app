@@ -1,0 +1,8 @@
+class: Reminder
+fields:
+  activityId: int
+  tripId: int
+  tripDayId: int
+  title: String
+  message: String
+  startTime: DateTime?

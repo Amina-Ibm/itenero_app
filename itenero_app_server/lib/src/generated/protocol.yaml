@@ -11,5 +11,10 @@ jwtRefresh:
 trip:
   - createTrip:
   - listTrips:
+  - generateItinerary:
+  - getTripWithPlan:
+  - getActivitiesForTrip:
+  - getUpcomingActivities:
+  - generateDaySummary:
 greeting:
   - hello:

@@ -9,7 +9,8 @@ environment:
 dependencies:
   serverpod: 3.1.1
   serverpod_auth_idp_server: 3.1.1
-  googleai_dart: ^2.0.0
+  googleai_dart: ^3.0.0
+
 
 
 dev_dependencies:

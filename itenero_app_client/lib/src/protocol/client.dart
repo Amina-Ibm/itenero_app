@@ -17,8 +17,13 @@ import 'dart:async' as _i3;
 import 'package:serverpod_auth_core_client/serverpod_auth_core_client.dart'
     as _i4;
 import 'package:itenero_app_client/src/protocol/trip.dart' as _i5;
-import 'package:itenero_app_client/src/protocol/greetings/greeting.dart' as _i6;
-import 'protocol.dart' as _i7;
+import 'package:itenero_app_client/src/protocol/trip_with_plan.dart' as _i6;
+import 'package:itenero_app_client/src/protocol/activity.dart' as _i7;
+import 'package:itenero_app_client/src/protocol/remainder.dart' as _i8;
+import 'package:itenero_app_client/src/protocol/day_briefing.dart' as _i9;
+import 'package:itenero_app_client/src/protocol/greetings/greeting.dart'
+    as _i10;
+import 'protocol.dart' as _i11;
 
 /// By extending [EmailIdpBaseEndpoint], the email identity provider endpoints
 /// are made available on the server and enable the corresponding sign-in widget
@@ -265,6 +270,51 @@ class EndpointTrip extends _i2.EndpointRef {
         'listTrips',
         {},
       );
+
+  _i3.Future<_i5.Trip> generateItinerary({
+    required int tripId,
+    required String userDescription,
+  }) => caller.callServerEndpoint<_i5.Trip>(
+    'trip',
+    'generateItinerary',
+    {
+      'tripId': tripId,
+      'userDescription': userDescription,
+    },
+  );
+
+  _i3.Future<_i6.TripWithPlan> getTripWithPlan({required int tripId}) =>
+      caller.callServerEndpoint<_i6.TripWithPlan>(
+        'trip',
+        'getTripWithPlan',
+        {'tripId': tripId},
+      );
+
+  _i3.Future<List<_i7.Activity>> getActivitiesForTrip({required int tripId}) =>
+      caller.callServerEndpoint<List<_i7.Activity>>(
+        'trip',
+        'getActivitiesForTrip',
+        {'tripId': tripId},
+      );
+
+  _i3.Future<List<_i8.Reminder>> getUpcomingActivities({required int tripId}) =>
+      caller.callServerEndpoint<List<_i8.Reminder>>(
+        'trip',
+        'getUpcomingActivities',
+        {'tripId': tripId},
+      );
+
+  _i3.Future<_i9.DayBriefing> generateDaySummary({
+    required int tripId,
+    required int dayIndex,
+  }) => caller.callServerEndpoint<_i9.DayBriefing>(
+    'trip',
+    'generateDaySummary',
+    {
+      'tripId': tripId,
+      'dayIndex': dayIndex,
+    },
+  );
 }
 
 /// This is an example endpoint that returns a greeting message through
@@ -277,8 +327,8 @@ class EndpointGreeting extends _i2.EndpointRef {
   String get name => 'greeting';
 
   /// Returns a personalized greeting message: "Hello {name}".
-  _i3.Future<_i6.Greeting> hello(String name) =>
-      caller.callServerEndpoint<_i6.Greeting>(
+  _i3.Future<_i10.Greeting> hello(String name) =>
+      caller.callServerEndpoint<_i10.Greeting>(
         'greeting',
         'hello',
         {'name': name},
@@ -316,7 +366,7 @@ class Client extends _i2.ServerpodClientShared {
     bool? disconnectStreamsOnLostInternetConnection,
   }) : super(
          host,
-         _i7.Protocol(),
+         _i11.Protocol(),
          securityContext: securityContext,
          streamingConnectionTimeout: streamingConnectionTimeout,
          connectionTimeout: connectionTimeout,

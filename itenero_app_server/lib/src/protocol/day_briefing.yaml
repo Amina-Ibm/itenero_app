@@ -1,0 +1,6 @@
+class: DayBriefing
+fields:
+  tripId: int
+  tripDayId: int
+  dayIndex: int
+  summary: String

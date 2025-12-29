@@ -18,8 +18,12 @@ import 'dart:async' as _i3;
 import 'package:serverpod_auth_core_server/serverpod_auth_core_server.dart'
     as _i4;
 import 'package:itenero_app_server/src/generated/trip.dart' as _i5;
+import 'package:itenero_app_server/src/generated/trip_with_plan.dart' as _i6;
+import 'package:itenero_app_server/src/generated/activity.dart' as _i7;
+import 'package:itenero_app_server/src/generated/remainder.dart' as _i8;
+import 'package:itenero_app_server/src/generated/day_briefing.dart' as _i9;
 import 'package:itenero_app_server/src/generated/greetings/greeting.dart'
-    as _i6;
+    as _i10;
 import 'package:itenero_app_server/src/generated/protocol.dart';
 import 'package:itenero_app_server/src/generated/endpoints.dart';
 export 'package:serverpod_test/serverpod_test_public_exports.dart';
@@ -532,6 +536,169 @@ class _TripEndpoint {
       }
     });
   }
+
+  _i3.Future<_i5.Trip> generateItinerary(
+    _i1.TestSessionBuilder sessionBuilder, {
+    required int tripId,
+    required String userDescription,
+  }) async {
+    return _i1.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'trip',
+            method: 'generateItinerary',
+          );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'trip',
+          methodName: 'generateItinerary',
+          parameters: _i1.testObjectToJson({
+            'tripId': tripId,
+            'userDescription': userDescription,
+          }),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue =
+            await (_localCallContext.method.call(
+                  _localUniqueSession,
+                  _localCallContext.arguments,
+                )
+                as _i3.Future<_i5.Trip>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+
+  _i3.Future<_i6.TripWithPlan> getTripWithPlan(
+    _i1.TestSessionBuilder sessionBuilder, {
+    required int tripId,
+  }) async {
+    return _i1.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'trip',
+            method: 'getTripWithPlan',
+          );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'trip',
+          methodName: 'getTripWithPlan',
+          parameters: _i1.testObjectToJson({'tripId': tripId}),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue =
+            await (_localCallContext.method.call(
+                  _localUniqueSession,
+                  _localCallContext.arguments,
+                )
+                as _i3.Future<_i6.TripWithPlan>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+
+  _i3.Future<List<_i7.Activity>> getActivitiesForTrip(
+    _i1.TestSessionBuilder sessionBuilder, {
+    required int tripId,
+  }) async {
+    return _i1.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'trip',
+            method: 'getActivitiesForTrip',
+          );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'trip',
+          methodName: 'getActivitiesForTrip',
+          parameters: _i1.testObjectToJson({'tripId': tripId}),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue =
+            await (_localCallContext.method.call(
+                  _localUniqueSession,
+                  _localCallContext.arguments,
+                )
+                as _i3.Future<List<_i7.Activity>>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+
+  _i3.Future<List<_i8.Reminder>> getUpcomingActivities(
+    _i1.TestSessionBuilder sessionBuilder, {
+    required int tripId,
+  }) async {
+    return _i1.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'trip',
+            method: 'getUpcomingActivities',
+          );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'trip',
+          methodName: 'getUpcomingActivities',
+          parameters: _i1.testObjectToJson({'tripId': tripId}),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue =
+            await (_localCallContext.method.call(
+                  _localUniqueSession,
+                  _localCallContext.arguments,
+                )
+                as _i3.Future<List<_i8.Reminder>>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+
+  _i3.Future<_i9.DayBriefing> generateDaySummary(
+    _i1.TestSessionBuilder sessionBuilder, {
+    required int tripId,
+    required int dayIndex,
+  }) async {
+    return _i1.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'trip',
+            method: 'generateDaySummary',
+          );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'trip',
+          methodName: 'generateDaySummary',
+          parameters: _i1.testObjectToJson({
+            'tripId': tripId,
+            'dayIndex': dayIndex,
+          }),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue =
+            await (_localCallContext.method.call(
+                  _localUniqueSession,
+                  _localCallContext.arguments,
+                )
+                as _i3.Future<_i9.DayBriefing>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
 }
 
 class _GreetingEndpoint {
@@ -544,7 +711,7 @@ class _GreetingEndpoint {
 
   final _i2.SerializationManager _serializationManager;
 
-  _i3.Future<_i6.Greeting> hello(
+  _i3.Future<_i10.Greeting> hello(
     _i1.TestSessionBuilder sessionBuilder,
     String name,
   ) async {
@@ -567,7 +734,7 @@ class _GreetingEndpoint {
                   _localUniqueSession,
                   _localCallContext.arguments,
                 )
-                as _i3.Future<_i6.Greeting>);
+                as _i3.Future<_i10.Greeting>);
         return _localReturnValue;
       } finally {
         await _localUniqueSession.close();

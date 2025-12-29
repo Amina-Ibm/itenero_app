@@ -1,0 +1,5 @@
+class: TripWithPlan
+fields:
+  trip: Trip
+  days: List<TripDay>
+  activities: List<Activity>

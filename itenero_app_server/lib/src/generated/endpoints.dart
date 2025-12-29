@@ -299,6 +299,113 @@ class Endpoints extends _i1.EndpointDispatch {
               ) async =>
                   (endpoints['trip'] as _i4.TripEndpoint).listTrips(session),
         ),
+        'generateItinerary': _i1.MethodConnector(
+          name: 'generateItinerary',
+          params: {
+            'tripId': _i1.ParameterDescription(
+              name: 'tripId',
+              type: _i1.getType<int>(),
+              nullable: false,
+            ),
+            'userDescription': _i1.ParameterDescription(
+              name: 'userDescription',
+              type: _i1.getType<String>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['trip'] as _i4.TripEndpoint).generateItinerary(
+                    session,
+                    tripId: params['tripId'],
+                    userDescription: params['userDescription'],
+                  ),
+        ),
+        'getTripWithPlan': _i1.MethodConnector(
+          name: 'getTripWithPlan',
+          params: {
+            'tripId': _i1.ParameterDescription(
+              name: 'tripId',
+              type: _i1.getType<int>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['trip'] as _i4.TripEndpoint).getTripWithPlan(
+                    session,
+                    tripId: params['tripId'],
+                  ),
+        ),
+        'getActivitiesForTrip': _i1.MethodConnector(
+          name: 'getActivitiesForTrip',
+          params: {
+            'tripId': _i1.ParameterDescription(
+              name: 'tripId',
+              type: _i1.getType<int>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['trip'] as _i4.TripEndpoint).getActivitiesForTrip(
+                    session,
+                    tripId: params['tripId'],
+                  ),
+        ),
+        'getUpcomingActivities': _i1.MethodConnector(
+          name: 'getUpcomingActivities',
+          params: {
+            'tripId': _i1.ParameterDescription(
+              name: 'tripId',
+              type: _i1.getType<int>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['trip'] as _i4.TripEndpoint).getUpcomingActivities(
+                    session,
+                    tripId: params['tripId'],
+                  ),
+        ),
+        'generateDaySummary': _i1.MethodConnector(
+          name: 'generateDaySummary',
+          params: {
+            'tripId': _i1.ParameterDescription(
+              name: 'tripId',
+              type: _i1.getType<int>(),
+              nullable: false,
+            ),
+            'dayIndex': _i1.ParameterDescription(
+              name: 'dayIndex',
+              type: _i1.getType<int>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['trip'] as _i4.TripEndpoint).generateDaySummary(
+                    session,
+                    tripId: params['tripId'],
+                    dayIndex: params['dayIndex'],
+                  ),
+        ),
       },
     );
     connectors['greeting'] = _i1.EndpointConnector(
