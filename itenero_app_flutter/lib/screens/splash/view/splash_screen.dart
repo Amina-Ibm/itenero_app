@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:itenero_app_flutter/core/core.dart';
 import 'package:itenero_app_flutter/routes/routes.dart';
+import 'package:itenero_app_flutter/screens/onboarding/service/onboarding_service.dart';
 
 part 'splash_screen_props.dart';
 
