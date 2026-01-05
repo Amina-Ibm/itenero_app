@@ -27,10 +27,15 @@ dependencies:
   cupertino_icons: ^1.0.5
   flutter:
     sdk: flutter
+  flutter_calenders: ^1.0.0
+  flutter_svg: ^2.2.3
   itenero_app_client:
     path: ../itenero_app_client
+  latlong2: ^0.9.1
+  location_picker_flutter_map: ^4.1.0
   serverpod_auth_idp_flutter: 3.1.1
   serverpod_flutter: 3.1.1
+  shared_preferences: ^2.5.4
 
 dev_dependencies:
   flutter_lints: '>=3.0.0 <7.0.0'
@@ -60,6 +65,8 @@ flutter:
   # https://flutter.dev/assets-and-images/#from-packages
   assets:
     - assets/config.json
+    - assets/images/
+
 dependency_overrides:
   flutter_secure_storage: ^10.0.0
 

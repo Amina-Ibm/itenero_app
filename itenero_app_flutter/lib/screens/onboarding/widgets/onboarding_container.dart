@@ -41,7 +41,7 @@ Widget onboardingContainer(BuildContext context) {
                 ),
               ),
               onPressed: () {
-                Navigator.pushReplacementNamed(context, '/login');
+                Navigator.pushReplacementNamed(context, '/addTrip');
               },
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -53,6 +53,7 @@ Widget onboardingContainer(BuildContext context) {
                       fontSize: SizeConfig.mediumText1,
                       fontWeight: FontWeight.w500,
                     ),
+                    textAlign: TextAlign.center,
                   ),
                   SvgPicture.asset(
                     "assets/icons/airplane.svg",

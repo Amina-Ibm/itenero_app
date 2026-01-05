@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:itenero_app_flutter/screens/screens.dart';
 
@@ -14,5 +13,6 @@ class AppRoutes {
   static Map<String, WidgetBuilder> routes = {
     splash: (context) => SplashScreen(),
     onboarding: (context) => OnboardingScreen(),
+    addTrip: (context) => AddTripPage(),
   };
 }

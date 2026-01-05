@@ -12,7 +12,7 @@ abstract class _SplashScreenProps extends State<SplashScreen> {
     final completed = await OnboardingService.isOnboardingCompleted();
 
     if (completed) {
-      Navigator.pushReplacementNamed(context, AppRoutes.login);
+      Navigator.pushReplacementNamed(context, AppRoutes.addTrip);
     } else {
       Navigator.pushReplacementNamed(context, AppRoutes.onboarding);
     }
