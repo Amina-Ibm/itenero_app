@@ -1,10 +1,11 @@
 import 'package:itenero_app_client/itenero_app_client.dart';
 import 'package:flutter/material.dart';
+import 'package:itenero_app_flutter/core/core.dart';
+import 'package:itenero_app_flutter/routes/routes.dart';
 import 'package:serverpod_flutter/serverpod_flutter.dart';
 import 'package:serverpod_auth_idp_flutter/serverpod_auth_idp_flutter.dart';
 
-import 'config/app_config.dart';
-import 'screens/greetings_screen.dart';
+import 'core/config/app_config.dart';
 
 /// Sets up a global client object that can be used to talk to the server from
 /// anywhere in our app. The client is generated from your server code
@@ -41,7 +42,6 @@ void main() async {
     ..authSessionManager = FlutterAuthSessionManager();
 
   client.auth.initialize();
-
   runApp(const MyApp());
 }
 
@@ -50,36 +50,13 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    SizeConfig().init(context);
     return MaterialApp(
-      title: 'Serverpod Demo',
-      theme: ThemeData(primarySwatch: Colors.blue),
-      home: const MyHomePage(title: 'Serverpod Example'),
+      debugShowCheckedModeBanner: false,
+      title: 'Travel App',
+      initialRoute: AppRoutes.splash,
+      routes: AppRoutes.routes,
     );
   }
 }
 
-class MyHomePage extends StatelessWidget {
-  const MyHomePage({super.key, required this.title});
-
-  final String title;
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text(title)),
-      body: const GreetingsScreen(),
-      // To test authentication in this example app, uncomment the line below
-      // and comment out the line above. This wraps the GreetingsScreen with a
-      // SignInScreen, which automatically shows a sign-in UI when the user is
-      // not authenticated and displays the GreetingsScreen once they sign in.
-      //
-      // body: SignInScreen(
-      //   child: GreetingsScreen(
-      //     onSignOut: () async {
-      //       await client.auth.signOutDevice();
-      //     },
-      //   ),
-      // ),
-    );
-  }
-}
