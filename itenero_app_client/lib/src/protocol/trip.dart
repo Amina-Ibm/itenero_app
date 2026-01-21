@@ -22,6 +22,10 @@ abstract class Trip implements _i1.SerializableModel {
     required this.travelersType,
     this.budget,
     required this.createdAt,
+    required this.startDate,
+    required this.endDate,
+    required this.latitude,
+    required this.longitude,
   });
 
   factory Trip({
@@ -33,6 +37,10 @@ abstract class Trip implements _i1.SerializableModel {
     required String travelersType,
     String? budget,
     required DateTime createdAt,
+    required DateTime startDate,
+    required DateTime endDate,
+    required double latitude,
+    required double longitude,
   }) = _TripImpl;
 
   factory Trip.fromJson(Map<String, dynamic> jsonSerialization) {
@@ -47,6 +55,12 @@ abstract class Trip implements _i1.SerializableModel {
       createdAt: _i1.DateTimeJsonExtension.fromJson(
         jsonSerialization['createdAt'],
       ),
+      startDate: _i1.DateTimeJsonExtension.fromJson(
+        jsonSerialization['startDate'],
+      ),
+      endDate: _i1.DateTimeJsonExtension.fromJson(jsonSerialization['endDate']),
+      latitude: (jsonSerialization['latitude'] as num).toDouble(),
+      longitude: (jsonSerialization['longitude'] as num).toDouble(),
     );
   }
 
@@ -69,6 +83,14 @@ abstract class Trip implements _i1.SerializableModel {
 
   DateTime createdAt;
 
+  DateTime startDate;
+
+  DateTime endDate;
+
+  double latitude;
+
+  double longitude;
+
   /// Returns a shallow copy of this [Trip]
   /// with some or all fields replaced by the given arguments.
   @_i1.useResult
@@ -81,6 +103,10 @@ abstract class Trip implements _i1.SerializableModel {
     String? travelersType,
     String? budget,
     DateTime? createdAt,
+    DateTime? startDate,
+    DateTime? endDate,
+    double? latitude,
+    double? longitude,
   });
   @override
   Map<String, dynamic> toJson() {
@@ -94,6 +120,10 @@ abstract class Trip implements _i1.SerializableModel {
       'travelersType': travelersType,
       if (budget != null) 'budget': budget,
       'createdAt': createdAt.toJson(),
+      'startDate': startDate.toJson(),
+      'endDate': endDate.toJson(),
+      'latitude': latitude,
+      'longitude': longitude,
     };
   }
 
@@ -115,6 +145,10 @@ class _TripImpl extends Trip {
     required String travelersType,
     String? budget,
     required DateTime createdAt,
+    required DateTime startDate,
+    required DateTime endDate,
+    required double latitude,
+    required double longitude,
   }) : super._(
          id: id,
          userId: userId,
@@ -124,6 +158,10 @@ class _TripImpl extends Trip {
          travelersType: travelersType,
          budget: budget,
          createdAt: createdAt,
+         startDate: startDate,
+         endDate: endDate,
+         latitude: latitude,
+         longitude: longitude,
        );
 
   /// Returns a shallow copy of this [Trip]
@@ -139,6 +177,10 @@ class _TripImpl extends Trip {
     String? travelersType,
     Object? budget = _Undefined,
     DateTime? createdAt,
+    DateTime? startDate,
+    DateTime? endDate,
+    double? latitude,
+    double? longitude,
   }) {
     return Trip(
       id: id is int? ? id : this.id,
@@ -149,6 +191,10 @@ class _TripImpl extends Trip {
       travelersType: travelersType ?? this.travelersType,
       budget: budget is String? ? budget : this.budget,
       createdAt: createdAt ?? this.createdAt,
+      startDate: startDate ?? this.startDate,
+      endDate: endDate ?? this.endDate,
+      latitude: latitude ?? this.latitude,
+      longitude: longitude ?? this.longitude,
     );
   }
 }

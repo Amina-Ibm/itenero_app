@@ -473,6 +473,10 @@ class _TripEndpoint {
     required String focus,
     required String travelersType,
     String? budget,
+    required DateTime startDate,
+    required DateTime endDate,
+    required double latitude,
+    required double longitude,
   }) async {
     return _i1.callAwaitableFunctionAndHandleExceptions(() async {
       var _localUniqueSession =
@@ -491,7 +495,42 @@ class _TripEndpoint {
             'focus': focus,
             'travelersType': travelersType,
             'budget': budget,
+            'startDate': startDate,
+            'endDate': endDate,
+            'latitude': latitude,
+            'longitude': longitude,
           }),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue =
+            await (_localCallContext.method.call(
+                  _localUniqueSession,
+                  _localCallContext.arguments,
+                )
+                as _i3.Future<_i5.Trip>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+
+  _i3.Future<_i5.Trip> updateTrip(
+    _i1.TestSessionBuilder sessionBuilder,
+    _i5.Trip trip,
+  ) async {
+    return _i1.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'trip',
+            method: 'updateTrip',
+          );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'trip',
+          methodName: 'updateTrip',
+          parameters: _i1.testObjectToJson({'trip': trip}),
           serializationManager: _serializationManager,
         );
         var _localReturnValue =

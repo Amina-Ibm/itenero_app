@@ -252,6 +252,10 @@ class EndpointTrip extends _i2.EndpointRef {
     required String focus,
     required String travelersType,
     String? budget,
+    required DateTime startDate,
+    required DateTime endDate,
+    required double latitude,
+    required double longitude,
   }) => caller.callServerEndpoint<_i5.Trip>(
     'trip',
     'createTrip',
@@ -261,8 +265,19 @@ class EndpointTrip extends _i2.EndpointRef {
       'focus': focus,
       'travelersType': travelersType,
       'budget': budget,
+      'startDate': startDate,
+      'endDate': endDate,
+      'latitude': latitude,
+      'longitude': longitude,
     },
   );
+
+  _i3.Future<_i5.Trip> updateTrip(_i5.Trip trip) =>
+      caller.callServerEndpoint<_i5.Trip>(
+        'trip',
+        'updateTrip',
+        {'trip': trip},
+      );
 
   _i3.Future<List<_i5.Trip>> listTrips() =>
       caller.callServerEndpoint<List<_i5.Trip>>(

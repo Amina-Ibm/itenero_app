@@ -11,13 +11,13 @@ class OnboardingScreen extends StatelessWidget {
         children: [
           Positioned.fill(
             child: Image.asset(
-              'assets/images/onboarding_bg.png',
+              'assets/images/onboarding_bg.jpg',
               fit: BoxFit.cover,
             ),
           ),
           Align(
             alignment: Alignment.bottomCenter,
-            child: onboardingContainer(context)
+            child: onboardingContainer(context),
           ),
         ],
       ),

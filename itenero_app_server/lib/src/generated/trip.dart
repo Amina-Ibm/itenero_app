@@ -22,6 +22,10 @@ abstract class Trip implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
     required this.travelersType,
     this.budget,
     required this.createdAt,
+    required this.startDate,
+    required this.endDate,
+    required this.latitude,
+    required this.longitude,
   });
 
   factory Trip({
@@ -33,6 +37,10 @@ abstract class Trip implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
     required String travelersType,
     String? budget,
     required DateTime createdAt,
+    required DateTime startDate,
+    required DateTime endDate,
+    required double latitude,
+    required double longitude,
   }) = _TripImpl;
 
   factory Trip.fromJson(Map<String, dynamic> jsonSerialization) {
@@ -47,6 +55,12 @@ abstract class Trip implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
       createdAt: _i1.DateTimeJsonExtension.fromJson(
         jsonSerialization['createdAt'],
       ),
+      startDate: _i1.DateTimeJsonExtension.fromJson(
+        jsonSerialization['startDate'],
+      ),
+      endDate: _i1.DateTimeJsonExtension.fromJson(jsonSerialization['endDate']),
+      latitude: (jsonSerialization['latitude'] as num).toDouble(),
+      longitude: (jsonSerialization['longitude'] as num).toDouble(),
     );
   }
 
@@ -71,6 +85,14 @@ abstract class Trip implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
 
   DateTime createdAt;
 
+  DateTime startDate;
+
+  DateTime endDate;
+
+  double latitude;
+
+  double longitude;
+
   @override
   _i1.Table<int?> get table => t;
 
@@ -86,6 +108,10 @@ abstract class Trip implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
     String? travelersType,
     String? budget,
     DateTime? createdAt,
+    DateTime? startDate,
+    DateTime? endDate,
+    double? latitude,
+    double? longitude,
   });
   @override
   Map<String, dynamic> toJson() {
@@ -99,6 +125,10 @@ abstract class Trip implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
       'travelersType': travelersType,
       if (budget != null) 'budget': budget,
       'createdAt': createdAt.toJson(),
+      'startDate': startDate.toJson(),
+      'endDate': endDate.toJson(),
+      'latitude': latitude,
+      'longitude': longitude,
     };
   }
 
@@ -114,6 +144,10 @@ abstract class Trip implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
       'travelersType': travelersType,
       if (budget != null) 'budget': budget,
       'createdAt': createdAt.toJson(),
+      'startDate': startDate.toJson(),
+      'endDate': endDate.toJson(),
+      'latitude': latitude,
+      'longitude': longitude,
     };
   }
 
@@ -159,6 +193,10 @@ class _TripImpl extends Trip {
     required String travelersType,
     String? budget,
     required DateTime createdAt,
+    required DateTime startDate,
+    required DateTime endDate,
+    required double latitude,
+    required double longitude,
   }) : super._(
          id: id,
          userId: userId,
@@ -168,6 +206,10 @@ class _TripImpl extends Trip {
          travelersType: travelersType,
          budget: budget,
          createdAt: createdAt,
+         startDate: startDate,
+         endDate: endDate,
+         latitude: latitude,
+         longitude: longitude,
        );
 
   /// Returns a shallow copy of this [Trip]
@@ -183,6 +225,10 @@ class _TripImpl extends Trip {
     String? travelersType,
     Object? budget = _Undefined,
     DateTime? createdAt,
+    DateTime? startDate,
+    DateTime? endDate,
+    double? latitude,
+    double? longitude,
   }) {
     return Trip(
       id: id is int? ? id : this.id,
@@ -193,6 +239,10 @@ class _TripImpl extends Trip {
       travelersType: travelersType ?? this.travelersType,
       budget: budget is String? ? budget : this.budget,
       createdAt: createdAt ?? this.createdAt,
+      startDate: startDate ?? this.startDate,
+      endDate: endDate ?? this.endDate,
+      latitude: latitude ?? this.latitude,
+      longitude: longitude ?? this.longitude,
     );
   }
 }
@@ -236,6 +286,28 @@ class TripUpdateTable extends _i1.UpdateTable<TripTable> {
         table.createdAt,
         value,
       );
+
+  _i1.ColumnValue<DateTime, DateTime> startDate(DateTime value) =>
+      _i1.ColumnValue(
+        table.startDate,
+        value,
+      );
+
+  _i1.ColumnValue<DateTime, DateTime> endDate(DateTime value) =>
+      _i1.ColumnValue(
+        table.endDate,
+        value,
+      );
+
+  _i1.ColumnValue<double, double> latitude(double value) => _i1.ColumnValue(
+    table.latitude,
+    value,
+  );
+
+  _i1.ColumnValue<double, double> longitude(double value) => _i1.ColumnValue(
+    table.longitude,
+    value,
+  );
 }
 
 class TripTable extends _i1.Table<int?> {
@@ -269,6 +341,22 @@ class TripTable extends _i1.Table<int?> {
       'createdAt',
       this,
     );
+    startDate = _i1.ColumnDateTime(
+      'startDate',
+      this,
+    );
+    endDate = _i1.ColumnDateTime(
+      'endDate',
+      this,
+    );
+    latitude = _i1.ColumnDouble(
+      'latitude',
+      this,
+    );
+    longitude = _i1.ColumnDouble(
+      'longitude',
+      this,
+    );
   }
 
   late final TripUpdateTable updateTable;
@@ -287,6 +375,14 @@ class TripTable extends _i1.Table<int?> {
 
   late final _i1.ColumnDateTime createdAt;
 
+  late final _i1.ColumnDateTime startDate;
+
+  late final _i1.ColumnDateTime endDate;
+
+  late final _i1.ColumnDouble latitude;
+
+  late final _i1.ColumnDouble longitude;
+
   @override
   List<_i1.Column> get columns => [
     id,
@@ -297,6 +393,10 @@ class TripTable extends _i1.Table<int?> {
     travelersType,
     budget,
     createdAt,
+    startDate,
+    endDate,
+    latitude,
+    longitude,
   ];
 }
 

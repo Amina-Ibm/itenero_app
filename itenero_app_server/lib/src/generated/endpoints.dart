@@ -15,10 +15,11 @@ import '../auth/email_idp_endpoint.dart' as _i2;
 import '../auth/jwt_refresh_endpoint.dart' as _i3;
 import '../endpoints/trip_endpoint.dart' as _i4;
 import '../greetings/greeting_endpoint.dart' as _i5;
+import 'package:itenero_app_server/src/generated/trip.dart' as _i6;
 import 'package:serverpod_auth_idp_server/serverpod_auth_idp_server.dart'
-    as _i6;
-import 'package:serverpod_auth_core_server/serverpod_auth_core_server.dart'
     as _i7;
+import 'package:serverpod_auth_core_server/serverpod_auth_core_server.dart'
+    as _i8;
 
 class Endpoints extends _i1.EndpointDispatch {
   @override
@@ -275,6 +276,26 @@ class Endpoints extends _i1.EndpointDispatch {
               type: _i1.getType<String?>(),
               nullable: true,
             ),
+            'startDate': _i1.ParameterDescription(
+              name: 'startDate',
+              type: _i1.getType<DateTime>(),
+              nullable: false,
+            ),
+            'endDate': _i1.ParameterDescription(
+              name: 'endDate',
+              type: _i1.getType<DateTime>(),
+              nullable: false,
+            ),
+            'latitude': _i1.ParameterDescription(
+              name: 'latitude',
+              type: _i1.getType<double>(),
+              nullable: false,
+            ),
+            'longitude': _i1.ParameterDescription(
+              name: 'longitude',
+              type: _i1.getType<double>(),
+              nullable: false,
+            ),
           },
           call:
               (
@@ -287,6 +308,28 @@ class Endpoints extends _i1.EndpointDispatch {
                 focus: params['focus'],
                 travelersType: params['travelersType'],
                 budget: params['budget'],
+                startDate: params['startDate'],
+                endDate: params['endDate'],
+                latitude: params['latitude'],
+                longitude: params['longitude'],
+              ),
+        ),
+        'updateTrip': _i1.MethodConnector(
+          name: 'updateTrip',
+          params: {
+            'trip': _i1.ParameterDescription(
+              name: 'trip',
+              type: _i1.getType<_i6.Trip>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['trip'] as _i4.TripEndpoint).updateTrip(
+                session,
+                params['trip'],
               ),
         ),
         'listTrips': _i1.MethodConnector(
@@ -432,9 +475,9 @@ class Endpoints extends _i1.EndpointDispatch {
         ),
       },
     );
-    modules['serverpod_auth_idp'] = _i6.Endpoints()
+    modules['serverpod_auth_idp'] = _i7.Endpoints()
       ..initializeEndpoints(server);
-    modules['serverpod_auth_core'] = _i7.Endpoints()
+    modules['serverpod_auth_core'] = _i8.Endpoints()
       ..initializeEndpoints(server);
   }
 }

@@ -29,13 +29,12 @@ webServer:
 
 # This is the database setup for your server.
 database:
-  host: localhost
-  port: 8090
+  host: 35.188.31.139
+  port: 5432
   name: itenero_app
   user: postgres
-  #requireSsl: true # defaults to false
-  #isUnixSocket: true # defaults to false
-  #maxConnectionCount: 10 # Defaults to 10, a negative or null value removes the limit
+  requireSsl: true
+
 
 # This is the setup for Redis.
 redis:

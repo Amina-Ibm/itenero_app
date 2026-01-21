@@ -1,28 +1,34 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:itenero_app_client/itenero_app_client.dart';
 import 'package:location_picker_flutter_map/location_picker_flutter_map.dart';
 import 'package:flutter_calenders/flutter_calenders.dart';
 import 'package:latlong2/latlong.dart';
 
 import '../../../core/utils/app_colors.dart';
 import '../../../core/utils/config_size.dart';
+import '../../../packages/client_provider.dart';
+import 'trip_details_page.dart';
 
-class AddTripPage extends StatefulWidget {
-  const AddTripPage({Key? key}) : super(key: key);
+class AddTripPage extends ConsumerStatefulWidget {
+  final TripWithPlan? tripToEdit;
+
+  const AddTripPage({Key? key, this.tripToEdit}) : super(key: key);
 
   @override
-  State<AddTripPage> createState() => _AddTripPageState();
+  ConsumerState<AddTripPage> createState() => _AddTripPageState();
 }
 
-class _AddTripPageState extends State<AddTripPage> {
+class _AddTripPageState extends ConsumerState<AddTripPage> {
   String _destination = '';
   LatLong? _selectedLocation;
   DateTime? _startDate;
   DateTime? _endDate;
   int _daysCount = 1;
   String _travelersType = 'solo';
-  String? _budget;
+  String _budget = '';
   final Set<String> _selectedInterests = {};
   final TextEditingController _descriptionController = TextEditingController();
   bool _isListening = false;
@@ -48,6 +54,24 @@ class _AddTripPageState extends State<AddTripPage> {
     {'id': 'moderate', 'label': 'Moderate'},
     {'id': 'luxury', 'label': 'Luxury'},
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.tripToEdit != null) {
+      final trip = widget.tripToEdit!.trip;
+      _destination = trip.destination;
+      _selectedLocation = LatLong(trip.latitude, trip.longitude);
+      _startDate = trip.startDate;
+      _endDate = trip.endDate;
+      _daysCount = trip.daysCount;
+      _travelersType = trip.travelersType;
+      _budget = trip.budget ?? '';
+      _selectedInterests.addAll(trip.focus.split(','));
+      _descriptionController.text =
+          ''; // User description is not stored in trip model currently, so leave empty or prompt new
+    }
+  }
 
   void _calculateDays() {
     if (_startDate != null && _endDate != null) {
@@ -109,7 +133,6 @@ class _AddTripPageState extends State<AddTripPage> {
               Navigator.pop(context, pickedData);
             },
             onError: (exception) {
-              // Handle errors gracefully
               print('Location picker error: $exception');
             },
           ),
@@ -118,9 +141,28 @@ class _AddTripPageState extends State<AddTripPage> {
     );
 
     if (result != null) {
+      // Parse address to be less specific (City/State, Country)
+      String formattedAddress = result.address;
+      try {
+        if (result.addressData != null) {
+          final data = result.addressData;
+          final state = data['state'] ?? data['state_district'];
+          final city = data['city'] ?? data['town'] ?? data['village'] ?? state;
+          final country = data['country'];
+
+          if (city != null && country != null) {
+            formattedAddress = '$city, $country';
+          } else if (state != null && country != null) {
+            formattedAddress = '$state, $country';
+          }
+        }
+      } catch (e) {
+        debugPrint('Error parsing address: $e');
+      }
+
       setState(() {
         _selectedLocation = result.latLong;
-        _destination = result.address;
+        _destination = formattedAddress;
       });
     }
   }
@@ -163,13 +205,25 @@ class _AddTripPageState extends State<AddTripPage> {
                 backgroundColor: AppColors.primary.withOpacity(0.05),
                 chooserColor: AppColors.text,
                 endYear: 2030,
-                startYear: 2025,
+                startYear: 2026,
                 currentMonthDateColor: AppColors.text,
                 pastFutureMonthDateColor: AppColors.grey,
                 isSelectedColor: AppColors.secondary,
                 isSelectedShow: true,
                 showEvent: false,
                 onDateTap: (date) {
+                  final now = DateTime.now();
+                  final today = DateTime(now.year, now.month, now.day);
+                  if (date.isBefore(today)) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Please select a date in the future'),
+                        duration: Duration(seconds: 1),
+                      ),
+                    );
+                    return;
+                  }
+
                   setState(() {
                     if (_startDate == null ||
                         (_startDate != null && _endDate != null)) {
@@ -275,7 +329,7 @@ class _AddTripPageState extends State<AddTripPage> {
     );
   }
 
-  void _generateItinerary() {
+  Future<void> _generateItinerary() async {
     if (_destination.isEmpty ||
         _startDate == null ||
         _endDate == null ||
@@ -292,31 +346,110 @@ class _AddTripPageState extends State<AddTripPage> {
       return;
     }
 
-    final tripData = {
-      'destination': _destination,
-      'daysCount': _daysCount,
-      'focus': _selectedInterests.join(','),
-      'travelersType': _travelersType,
-      'budget': _budget,
-      'startDate': _startDate?.toIso8601String(),
-      'endDate': _endDate?.toIso8601String(),
-      'userDescription': _descriptionController.text,
-      'latitude': _selectedLocation?.latitude,
-      'longitude': _selectedLocation?.longitude,
-    };
+    try {
+      final client = ref.read(clientProvider);
 
-    debugPrint('Creating trip with data: $tripData');
-
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(
-          'Trip created! Generating itinerary...',
-          style: TextStyle(fontSize: SizeConfig.smallText2),
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            'Creating trip...',
+            style: TextStyle(fontSize: SizeConfig.smallText2),
+          ),
+          duration: const Duration(seconds: 2),
         ),
-        backgroundColor: AppColors.success,
-        duration: const Duration(seconds: 3),
-      ),
-    );
+      );
+
+      // 1. Create the trip
+      Trip trip;
+
+      if (widget.tripToEdit != null) {
+        // Update existing trip
+        trip = widget.tripToEdit!.trip;
+        // Manually update fields since we can't fully rely on copyWith if not generated or available
+        trip.destination = _destination;
+        trip.daysCount = _daysCount;
+        trip.focus = _selectedInterests.join(',');
+        trip.travelersType = _travelersType;
+        trip.budget = _budget.isNotEmpty ? _budget : null;
+        trip.startDate = _startDate!;
+        trip.endDate = _endDate!;
+        trip.latitude = _selectedLocation!.latitude;
+        trip.longitude = _selectedLocation!.longitude;
+
+        await client.trip.updateTrip(trip);
+        debugPrint('Trip updated with ID: ${trip.id}');
+      } else {
+        // Create new trip
+        trip = await client.trip.createTrip(
+          destination: _destination,
+          daysCount: _daysCount,
+          focus: _selectedInterests.join(','),
+          travelersType: _travelersType,
+          budget: _budget.isNotEmpty ? _budget : null,
+          startDate: _startDate!,
+          endDate: _endDate!,
+          latitude: _selectedLocation!.latitude,
+          longitude: _selectedLocation!.longitude,
+        );
+        debugPrint('Trip created with ID: ${trip.id}');
+      }
+
+      debugPrint('Trip created with ID: ${trip.id}');
+
+      // 2. Generate itinerary
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            widget.tripToEdit != null
+                ? 'Trip updated! Regenerating itinerary...'
+                : 'Trip created! Generating itinerary...',
+            style: TextStyle(fontSize: SizeConfig.smallText2),
+          ),
+          backgroundColor: AppColors.success,
+          duration: const Duration(seconds: 3),
+        ),
+      );
+
+      await client.trip.generateItinerary(
+        tripId: trip.id!,
+        userDescription: _descriptionController.text.isEmpty
+            ? 'Plan an appropriate trip based on my preferences'
+            : _descriptionController.text,
+      );
+
+      debugPrint('Itinerary generated successfully');
+
+      // 3. Fetch the complete trip with plan
+      final tripWithPlan = await client.trip.getTripWithPlan(
+        tripId: trip.id!,
+      );
+
+      debugPrint(
+        'Fetched trip with ${tripWithPlan.days.length} days and ${tripWithPlan.activities.length} activities',
+      );
+
+      if (mounted) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => TripDetailsPage(tripWithPlan: tripWithPlan),
+          ),
+        );
+      }
+    } catch (e) {
+      debugPrint('Error creating trip: $e');
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              'Failed to create trip: $e',
+              style: TextStyle(fontSize: SizeConfig.smallText2),
+            ),
+            backgroundColor: AppColors.error,
+          ),
+        );
+      }
+    }
   }
 
   @override
@@ -335,8 +468,12 @@ class _AddTripPageState extends State<AddTripPage> {
         backgroundColor: AppColors.primary,
         elevation: 2,
         centerTitle: true,
+        toolbarHeight: 80,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(bottom: Radius.circular(20)),
+        ),
         title: Text(
-          'Plan a New Trip',
+          widget.tripToEdit != null ? 'Edit Trip' : 'Plan a New Trip',
           style: GoogleFonts.inter(
             fontSize: SizeConfig.mediumText1,
             fontWeight: FontWeight.w700,
@@ -585,7 +722,7 @@ class _AddTripPageState extends State<AddTripPage> {
                               : 0,
                         ),
                         child: GestureDetector(
-                          onTap: () => setState(() => _budget = option['id']),
+                          onTap: () => setState(() => _budget = option['id']!),
                           child: Container(
                             padding: EdgeInsets.symmetric(
                               horizontal: SizeConfig.normalpadding * 3.25,

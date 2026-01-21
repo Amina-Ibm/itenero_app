@@ -10,6 +10,7 @@ jwtRefresh:
   - refreshAccessToken:
 trip:
   - createTrip:
+  - updateTrip:
   - listTrips:
   - generateItinerary:
   - getTripWithPlan:

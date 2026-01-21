@@ -56,7 +56,7 @@ Widget onboardingContainer(BuildContext context) {
                     textAlign: TextAlign.center,
                   ),
                   SvgPicture.asset(
-                    "assets/icons/airplane.svg",
+                    "assets/images/airplane.svg",
                     width: SizeConfig.largeText1,
                   ),
                 ],

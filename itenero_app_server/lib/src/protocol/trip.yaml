@@ -1,7 +1,6 @@
 class: Trip
 table: trip
 fields:
-  id: int?
   userId: String?
   destination: String
   daysCount: int
@@ -9,3 +8,9 @@ fields:
   travelersType: String  # adults, kids, family
   budget: String?
   createdAt: DateTime
+  startDate: DateTime
+  endDate: DateTime
+  latitude: double
+  longitude: double
+
+

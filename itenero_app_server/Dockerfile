@@ -1,39 +1,42 @@
 # Build stage
 FROM dart:3.8.0 AS build
+
 WORKDIR /app
+
+# Copy everything
 COPY . .
 
-# Install dependencies and compile the server executable
+# Get dependencies and compile
 RUN dart pub get
 RUN dart compile exe bin/main.dart -o bin/server
 
-# Final stage
-FROM alpine:latest
+# Runtime stage
+FROM debian:bookworm-slim
 
-# Environment variables
-ENV runmode=production
-ENV serverid=default
-ENV logging=normal
-ENV role=monolith
+# Install dependencies
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+    ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
 
-# Copy runtime dependencies
-COPY --from=build /runtime/ /
+WORKDIR /app
 
-# Copy compiled server executable
-COPY --from=build /app/bin/server server
+# Copy compiled server
+COPY --from=build /app/bin/server ./server
 
-# Copy configuration files and resources
-COPY --from=build /app/config/ config/
-COPY --from=build /app/web/ web/
-COPY --from=build /app/migrations/ migrations/
+# Copy all necessary files
+COPY --from=build /app/config ./config
+COPY --from=build /app/migrations ./migrations
+COPY --from=build /app/web ./web
+COPY --from=build /app/lib ./lib
 
-# This file is required to enable the endpoint log filter in Insights.
-COPY --from=build /app/lib/src/generated/protocol.yaml lib/src/generated/protocol.yaml
+# Make executable
+RUN chmod +x ./server
 
-# Expose ports
+# Expose all three ports
 EXPOSE 8080
 EXPOSE 8081
 EXPOSE 8082
 
-# Define the entrypoint command
-ENTRYPOINT ./server --mode=$runmode --server-id=$serverid --logging=$logging --role=$role
+# Start server
+CMD ["./server", "--mode", "production", "--apply-migrations"]
