@@ -41,7 +41,7 @@ Widget onboardingContainer(BuildContext context) {
                 ),
               ),
               onPressed: () {
-                Navigator.pushReplacementNamed(context, '/addTrip');
+                Navigator.pushReplacementNamed(context, '/home');
               },
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,

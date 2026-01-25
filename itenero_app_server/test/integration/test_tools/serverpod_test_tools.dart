@@ -477,6 +477,9 @@ class _TripEndpoint {
     required DateTime endDate,
     required double latitude,
     required double longitude,
+    String? originAddress,
+    double? originLat,
+    double? originLon,
   }) async {
     return _i1.callAwaitableFunctionAndHandleExceptions(() async {
       var _localUniqueSession =
@@ -499,6 +502,9 @@ class _TripEndpoint {
             'endDate': endDate,
             'latitude': latitude,
             'longitude': longitude,
+            'originAddress': originAddress,
+            'originLat': originLat,
+            'originLon': originLon,
           }),
           serializationManager: _serializationManager,
         );

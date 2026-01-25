@@ -24,7 +24,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Travel App',
-      initialRoute: AppRoutes.splash,
+      initialRoute: AppRoutes.home,
       routes: AppRoutes.routes,
     );
   }
