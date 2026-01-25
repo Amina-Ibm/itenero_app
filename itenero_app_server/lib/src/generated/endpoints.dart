@@ -296,6 +296,21 @@ class Endpoints extends _i1.EndpointDispatch {
               type: _i1.getType<double>(),
               nullable: false,
             ),
+            'originAddress': _i1.ParameterDescription(
+              name: 'originAddress',
+              type: _i1.getType<String?>(),
+              nullable: true,
+            ),
+            'originLat': _i1.ParameterDescription(
+              name: 'originLat',
+              type: _i1.getType<double?>(),
+              nullable: true,
+            ),
+            'originLon': _i1.ParameterDescription(
+              name: 'originLon',
+              type: _i1.getType<double?>(),
+              nullable: true,
+            ),
           },
           call:
               (
@@ -312,6 +327,9 @@ class Endpoints extends _i1.EndpointDispatch {
                 endDate: params['endDate'],
                 latitude: params['latitude'],
                 longitude: params['longitude'],
+                originAddress: params['originAddress'],
+                originLat: params['originLat'],
+                originLon: params['originLon'],
               ),
         ),
         'updateTrip': _i1.MethodConnector(

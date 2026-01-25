@@ -256,6 +256,9 @@ class EndpointTrip extends _i2.EndpointRef {
     required DateTime endDate,
     required double latitude,
     required double longitude,
+    String? originAddress,
+    double? originLat,
+    double? originLon,
   }) => caller.callServerEndpoint<_i5.Trip>(
     'trip',
     'createTrip',
@@ -269,6 +272,9 @@ class EndpointTrip extends _i2.EndpointRef {
       'endDate': endDate,
       'latitude': latitude,
       'longitude': longitude,
+      'originAddress': originAddress,
+      'originLat': originLat,
+      'originLon': originLon,
     },
   );
 

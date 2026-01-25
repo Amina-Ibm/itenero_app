@@ -12,5 +12,8 @@ fields:
   endDate: DateTime
   latitude: double
   longitude: double
+  originAddress: String?
+  originLat: double?
+  originLon: double?
 
 

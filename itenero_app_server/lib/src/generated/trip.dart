@@ -26,6 +26,9 @@ abstract class Trip implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
     required this.endDate,
     required this.latitude,
     required this.longitude,
+    this.originAddress,
+    this.originLat,
+    this.originLon,
   });
 
   factory Trip({
@@ -41,6 +44,9 @@ abstract class Trip implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
     required DateTime endDate,
     required double latitude,
     required double longitude,
+    String? originAddress,
+    double? originLat,
+    double? originLon,
   }) = _TripImpl;
 
   factory Trip.fromJson(Map<String, dynamic> jsonSerialization) {
@@ -61,6 +67,9 @@ abstract class Trip implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
       endDate: _i1.DateTimeJsonExtension.fromJson(jsonSerialization['endDate']),
       latitude: (jsonSerialization['latitude'] as num).toDouble(),
       longitude: (jsonSerialization['longitude'] as num).toDouble(),
+      originAddress: jsonSerialization['originAddress'] as String?,
+      originLat: (jsonSerialization['originLat'] as num?)?.toDouble(),
+      originLon: (jsonSerialization['originLon'] as num?)?.toDouble(),
     );
   }
 
@@ -93,6 +102,12 @@ abstract class Trip implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
 
   double longitude;
 
+  String? originAddress;
+
+  double? originLat;
+
+  double? originLon;
+
   @override
   _i1.Table<int?> get table => t;
 
@@ -112,6 +127,9 @@ abstract class Trip implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
     DateTime? endDate,
     double? latitude,
     double? longitude,
+    String? originAddress,
+    double? originLat,
+    double? originLon,
   });
   @override
   Map<String, dynamic> toJson() {
@@ -129,6 +147,9 @@ abstract class Trip implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
       'endDate': endDate.toJson(),
       'latitude': latitude,
       'longitude': longitude,
+      if (originAddress != null) 'originAddress': originAddress,
+      if (originLat != null) 'originLat': originLat,
+      if (originLon != null) 'originLon': originLon,
     };
   }
 
@@ -148,6 +169,9 @@ abstract class Trip implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
       'endDate': endDate.toJson(),
       'latitude': latitude,
       'longitude': longitude,
+      if (originAddress != null) 'originAddress': originAddress,
+      if (originLat != null) 'originLat': originLat,
+      if (originLon != null) 'originLon': originLon,
     };
   }
 
@@ -197,6 +221,9 @@ class _TripImpl extends Trip {
     required DateTime endDate,
     required double latitude,
     required double longitude,
+    String? originAddress,
+    double? originLat,
+    double? originLon,
   }) : super._(
          id: id,
          userId: userId,
@@ -210,6 +237,9 @@ class _TripImpl extends Trip {
          endDate: endDate,
          latitude: latitude,
          longitude: longitude,
+         originAddress: originAddress,
+         originLat: originLat,
+         originLon: originLon,
        );
 
   /// Returns a shallow copy of this [Trip]
@@ -229,6 +259,9 @@ class _TripImpl extends Trip {
     DateTime? endDate,
     double? latitude,
     double? longitude,
+    Object? originAddress = _Undefined,
+    Object? originLat = _Undefined,
+    Object? originLon = _Undefined,
   }) {
     return Trip(
       id: id is int? ? id : this.id,
@@ -243,6 +276,11 @@ class _TripImpl extends Trip {
       endDate: endDate ?? this.endDate,
       latitude: latitude ?? this.latitude,
       longitude: longitude ?? this.longitude,
+      originAddress: originAddress is String?
+          ? originAddress
+          : this.originAddress,
+      originLat: originLat is double? ? originLat : this.originLat,
+      originLon: originLon is double? ? originLon : this.originLon,
     );
   }
 }
@@ -308,6 +346,22 @@ class TripUpdateTable extends _i1.UpdateTable<TripTable> {
     table.longitude,
     value,
   );
+
+  _i1.ColumnValue<String, String> originAddress(String? value) =>
+      _i1.ColumnValue(
+        table.originAddress,
+        value,
+      );
+
+  _i1.ColumnValue<double, double> originLat(double? value) => _i1.ColumnValue(
+    table.originLat,
+    value,
+  );
+
+  _i1.ColumnValue<double, double> originLon(double? value) => _i1.ColumnValue(
+    table.originLon,
+    value,
+  );
 }
 
 class TripTable extends _i1.Table<int?> {
@@ -357,6 +411,18 @@ class TripTable extends _i1.Table<int?> {
       'longitude',
       this,
     );
+    originAddress = _i1.ColumnString(
+      'originAddress',
+      this,
+    );
+    originLat = _i1.ColumnDouble(
+      'originLat',
+      this,
+    );
+    originLon = _i1.ColumnDouble(
+      'originLon',
+      this,
+    );
   }
 
   late final TripUpdateTable updateTable;
@@ -383,6 +449,12 @@ class TripTable extends _i1.Table<int?> {
 
   late final _i1.ColumnDouble longitude;
 
+  late final _i1.ColumnString originAddress;
+
+  late final _i1.ColumnDouble originLat;
+
+  late final _i1.ColumnDouble originLon;
+
   @override
   List<_i1.Column> get columns => [
     id,
@@ -397,6 +469,9 @@ class TripTable extends _i1.Table<int?> {
     endDate,
     latitude,
     longitude,
+    originAddress,
+    originLat,
+    originLon,
   ];
 }
 

@@ -24,6 +24,8 @@ class AddTripPage extends ConsumerStatefulWidget {
 class _AddTripPageState extends ConsumerState<AddTripPage> {
   String _destination = '';
   LatLong? _selectedLocation;
+  String _originAddress = '';
+  LatLong? _originLocation;
   DateTime? _startDate;
   DateTime? _endDate;
   int _daysCount = 1;
@@ -61,7 +63,12 @@ class _AddTripPageState extends ConsumerState<AddTripPage> {
     if (widget.tripToEdit != null) {
       final trip = widget.tripToEdit!.trip;
       _destination = trip.destination;
+      _destination = trip.destination;
       _selectedLocation = LatLong(trip.latitude, trip.longitude);
+      _originAddress = trip.originAddress ?? '';
+      if (trip.originLat != null && trip.originLon != null) {
+        _originLocation = LatLong(trip.originLat!, trip.originLon!);
+      }
       _startDate = trip.startDate;
       _endDate = trip.endDate;
       _daysCount = trip.daysCount;
@@ -77,6 +84,89 @@ class _AddTripPageState extends ConsumerState<AddTripPage> {
     if (_startDate != null && _endDate != null) {
       setState(() {
         _daysCount = _endDate!.difference(_startDate!).inDays + 1;
+      });
+    }
+  }
+
+  Future<void> _selectOrigin() async {
+    final result = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => Scaffold(
+          appBar: AppBar(
+            backgroundColor: AppColors.primary,
+            title: const Text('Select Origin'),
+            leading: IconButton(
+              icon: const Icon(Icons.arrow_back),
+              onPressed: () => Navigator.pop(context),
+            ),
+          ),
+          body: FlutterLocationPicker(
+            userAgent: 'IteneroApp/1.0',
+            initPosition: _originLocation ?? LatLong(23.5880, 58.3829),
+            selectLocationButtonText: 'Select This Origin',
+            initZoom: 11,
+            minZoomLevel: 5,
+            maxZoomLevel: 16,
+            trackMyPosition: true,
+            showCurrentLocationPointer: true,
+            mapLanguage: 'en',
+            searchBarHintText: 'Search origin...',
+            searchBarBackgroundColor: AppColors.white,
+            selectLocationButtonPositionBottom: 16.0,
+            selectLocationButtonStyle: ElevatedButton.styleFrom(
+              backgroundColor: AppColors.secondary,
+              foregroundColor: AppColors.white,
+              padding: EdgeInsets.symmetric(
+                horizontal: SizeConfig.normalpadding,
+                vertical: SizeConfig.normalpadding * 1.25,
+              ),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(
+                  SizeConfig.simpleBorderRadius * 3,
+                ),
+              ),
+            ),
+            zoomButtonsColor: AppColors.white,
+            zoomButtonsBackgroundColor: AppColors.primary,
+            markerIcon: const Icon(
+              Icons.flight_takeoff,
+              color: AppColors.secondary,
+              size: 60,
+            ),
+            onPicked: (pickedData) {
+              Navigator.pop(context, pickedData);
+            },
+            onError: (exception) {
+              print('Location picker error: $exception');
+            },
+          ),
+        ),
+      ),
+    );
+
+    if (result != null) {
+      String formattedAddress = result.address;
+      try {
+        if (result.addressData != null) {
+          final data = result.addressData;
+          final state = data['state'] ?? data['state_district'];
+          final city = data['city'] ?? data['town'] ?? data['village'] ?? state;
+          final country = data['country'];
+
+          if (city != null && country != null) {
+            formattedAddress = '$city, $country';
+          } else if (state != null && country != null) {
+            formattedAddress = '$state, $country';
+          }
+        }
+      } catch (e) {
+        debugPrint('Error parsing address: $e');
+      }
+
+      setState(() {
+        _originLocation = result.latLong;
+        _originAddress = formattedAddress;
       });
     }
   }
@@ -374,7 +464,11 @@ class _AddTripPageState extends ConsumerState<AddTripPage> {
         trip.startDate = _startDate!;
         trip.endDate = _endDate!;
         trip.latitude = _selectedLocation!.latitude;
+        trip.latitude = _selectedLocation!.latitude;
         trip.longitude = _selectedLocation!.longitude;
+        trip.originAddress = _originAddress.isNotEmpty ? _originAddress : null;
+        trip.originLat = _originLocation?.latitude;
+        trip.originLon = _originLocation?.longitude;
 
         await client.trip.updateTrip(trip);
         debugPrint('Trip updated with ID: ${trip.id}');
@@ -390,6 +484,9 @@ class _AddTripPageState extends ConsumerState<AddTripPage> {
           endDate: _endDate!,
           latitude: _selectedLocation!.latitude,
           longitude: _selectedLocation!.longitude,
+          originAddress: _originAddress.isNotEmpty ? _originAddress : null,
+          originLat: _originLocation?.latitude,
+          originLon: _originLocation?.longitude,
         );
         debugPrint('Trip created with ID: ${trip.id}');
       }
@@ -548,6 +645,57 @@ class _AddTripPageState extends ConsumerState<AddTripPage> {
                 ),
               ),
               SizedBox(height: SizeConfig.normalpadding * 8),
+
+              // Origin Field
+              _buildCard(
+                title: 'Origin',
+                icon: Icons.flight_takeoff,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    GestureDetector(
+                      onTap: _selectOrigin,
+                      child: Container(
+                        padding: EdgeInsets.all(
+                          SizeConfig.normalpadding * 2,
+                        ),
+                        decoration: BoxDecoration(
+                          border: Border.all(color: AppColors.lightGrey),
+                          borderRadius: BorderRadius.circular(
+                            SizeConfig.simpleBorderRadius,
+                          ),
+                        ),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                _originAddress.isEmpty
+                                    ? 'Select Origin'
+                                    : _originAddress,
+                                style: GoogleFonts.inter(
+                                  fontWeight: FontWeight.w400,
+                                  fontSize: SizeConfig.smallText2,
+                                  color: _originAddress.isEmpty
+                                      ? Color(0xFF6C757D80)
+                                      : AppColors.text,
+                                ),
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                            Icon(
+                              Icons.search,
+                              color: AppColors.grey,
+                              size: SizeConfig.mediumText1,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(height: SizeConfig.normalpadding * 2),
 
               // Destination Field
               _buildCard(

@@ -17,6 +17,9 @@ class TripEndpoint extends Endpoint {
     required DateTime endDate,
     required double latitude,
     required double longitude,
+    String? originAddress,
+    double? originLat,
+    double? originLon,
   }) async {
     print('\n========================================');
     print('🚀 CREATE TRIP STARTED');
@@ -29,6 +32,7 @@ class TripEndpoint extends Endpoint {
     print('📆 Start: $startDate');
     print('📆 End: $endDate');
     print('🌍 Coordinates: ($latitude, $longitude)');
+    print('🛫 Origin: ${originAddress ?? 'Not specified'}');
 
     final now = DateTime.now();
 
@@ -42,6 +46,9 @@ class TripEndpoint extends Endpoint {
       endDate: endDate,
       latitude: latitude,
       longitude: longitude,
+      originAddress: originAddress,
+      originLat: originLat,
+      originLon: originLon,
       createdAt: now,
     );
 

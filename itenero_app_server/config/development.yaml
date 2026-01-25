@@ -7,6 +7,8 @@
 # facing ports.
 
 # Configuration for the main API server.
+applyMigrations: true
+
 apiServer:
   port: 8080
   publicHost: localhost
@@ -29,11 +31,13 @@ webServer:
 
 # This is the database setup for your server.
 database:
-  host: 35.188.31.139
+  host: 34.133.230.247
   port: 5432
-  name: itenero_app
+  name: itenero
   user: postgres
-  requireSsl: true
+  password: 1234
+  requireSsl: false
+
 
 
 # This is the setup for Redis.
