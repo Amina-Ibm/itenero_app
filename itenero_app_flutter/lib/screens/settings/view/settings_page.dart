@@ -25,8 +25,8 @@ class SettingsPage extends StatelessWidget {
         backgroundColor: AppColors.primary,
         elevation: 0,
         leading: IconButton(
-           icon: const Icon(Icons.arrow_back, color: Colors.white),
-           onPressed: () => Navigator.pop(context),
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: () => Navigator.pop(context),
         ),
         actions: [
           IconButton(
@@ -39,25 +39,41 @@ class SettingsPage extends StatelessWidget {
         padding: EdgeInsets.all(SizeConfig.normalpadding * 2),
         child: Column(
           children: [
+            SizedBox(
+              height: SizeConfig.normalpadding * 4,
+            ),
             // Profile Card
             Container(
               padding: EdgeInsets.all(SizeConfig.normalpadding * 2),
+              height: 91,
               decoration: BoxDecoration(
                 color: Colors.white,
-                borderRadius: BorderRadius.circular(16),
+                borderRadius: BorderRadius.circular(10),
                 boxShadow: [
                   BoxShadow(
                     color: Colors.black.withOpacity(0.05),
-                    blurRadius: 10,
+                    blurRadius: 1,
                     offset: const Offset(0, 4),
                   ),
                 ],
               ),
               child: Row(
                 children: [
-                  const CircleAvatar(
-                    radius: 30,
-                    backgroundImage: NetworkImage('https://i.pravatar.cc/150?img=5'), // Dummy image
+                  Container(
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: Border.all(
+                        color: AppColors.primary,
+                        width: 1.6,
+                      ),
+                    ),
+                    child: const CircleAvatar(
+                      foregroundImage: NetworkImage(
+                        'https://i.pravatar.cc/150?img=5',
+                      ),
+                      radius: 30,
+                      backgroundColor: Colors.transparent,
+                    ),
                   ),
                   SizedBox(width: SizeConfig.normalpadding * 2),
                   Expanded(
@@ -70,9 +86,9 @@ class SettingsPage extends StatelessWidget {
                             fontWeight: FontWeight.bold,
                             fontSize: SizeConfig.mediumText2,
                             color: AppColors.text,
+                            height: 2,
                           ),
                         ),
-                        SizedBox(height: 4),
                         Text(
                           'subaidarahman22@gmail.com',
                           style: GoogleFonts.inter(
@@ -86,32 +102,46 @@ class SettingsPage extends StatelessWidget {
                 ],
               ),
             ),
-            SizedBox(height: SizeConfig.normalpadding * 2),
+            SizedBox(height: SizeConfig.normalpadding * 8),
 
             // Settings Options
             _buildSettingsItem('Edit Profile', Icons.edit_outlined, context),
-            SizedBox(height: SizeConfig.normalpadding * 1.5),
+            SizedBox(height: SizeConfig.normalpadding * 6),
             _buildSettingsItem('Currency', Icons.attach_money, context),
-            SizedBox(height: SizeConfig.normalpadding * 1.5),
+            SizedBox(height: SizeConfig.normalpadding * 6),
             _buildSettingsItem('Change Password', Icons.lock_outline, context),
-            SizedBox(height: SizeConfig.normalpadding * 1.5),
-            _buildSettingsItem('Log Out', Icons.logout, context, isDestructive: true),
+            SizedBox(height: SizeConfig.normalpadding * 6),
+            _buildSettingsItem(
+              'Log Out',
+              Icons.logout,
+              context,
+              isDestructive: true,
+            ),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildSettingsItem(String title, IconData icon, BuildContext context,
-      {bool isDestructive = false}) {
+  Widget _buildSettingsItem(
+    String title,
+    IconData icon,
+    BuildContext context, {
+    bool isDestructive = false,
+  }) {
     return Container(
+      height: 56,
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(
+          width: 1.2,
+          color: Color(0xFF252525).withOpacity(0.3),
+        ),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.05),
-            blurRadius: 10,
+            blurRadius: 1,
             offset: const Offset(0, 4),
           ),
         ],
@@ -121,8 +151,12 @@ class SettingsPage extends StatelessWidget {
         child: InkWell(
           onTap: () {
             if (title == 'Log Out') {
-               // Handle logout
-               Navigator.pushNamedAndRemoveUntil(context, AppRoutes.login, (route) => false);
+              // Handle logout
+              Navigator.pushNamedAndRemoveUntil(
+                context,
+                AppRoutes.login,
+                (route) => false,
+              );
             }
           },
           borderRadius: BorderRadius.circular(16),
@@ -138,7 +172,7 @@ class SettingsPage extends StatelessWidget {
                   color: isDestructive ? Colors.red : AppColors.grey,
                   size: 24,
                 ),
-                SizedBox(width: SizeConfig.normalpadding * 2),
+                SizedBox(width: SizeConfig.normalpadding * 4),
                 Expanded(
                   child: Text(
                     title,
@@ -152,7 +186,7 @@ class SettingsPage extends StatelessWidget {
                 Icon(
                   Icons.arrow_forward_ios,
                   color: AppColors.grey,
-                  size: 16,
+                  size: 20,
                 ),
               ],
             ),

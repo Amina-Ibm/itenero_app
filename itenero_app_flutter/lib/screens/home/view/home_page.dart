@@ -76,25 +76,16 @@ class _HomePageState extends ConsumerState<HomePage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      Row(
-                        children: [
-                          Text(
-                            'Itiner',
-                            style: GoogleFonts.inter(
-                              color: AppColors.white,
-                              fontSize: 24,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          const Icon(
-                            Icons.public,
-                            color: AppColors.white,
-                            size: 20,
-                          ),
-                        ],
+                      SizedBox(
+                        width: 40,
                       ),
+                      Image.asset(
+                        'assets/images/logo-small.png',
+                      ),
+
+                      //Spacer(),
                       IconButton(
                         icon: const Icon(
                           Icons.notifications,
@@ -104,7 +95,6 @@ class _HomePageState extends ConsumerState<HomePage> {
                       ),
                     ],
                   ),
-                  SizedBox(height: SizeConfig.normalpadding),
                   RichText(
                     text: TextSpan(
                       children: [
@@ -127,7 +117,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                       ],
                     ),
                   ),
-                  SizedBox(height: SizeConfig.normalpadding * 2),
+                  SizedBox(height: SizeConfig.normalpadding * 3),
                   // Search Bar
                   Container(
                     padding: EdgeInsets.symmetric(
@@ -151,7 +141,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                       ),
                     ),
                   ),
-                  SizedBox(height: SizeConfig.normalpadding),
+                  SizedBox(height: SizeConfig.normalpadding * 2),
                 ],
               ),
             ),
@@ -219,28 +209,64 @@ class _HomePageState extends ConsumerState<HomePage> {
           );
           _refreshTrips();
         },
+        shape: const CircleBorder(),
         backgroundColor: AppColors.primary,
         child: const Icon(Icons.add, color: AppColors.white),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: BottomAppBar(
         shape: const CircularNotchedRectangle(),
-        notchMargin: 8.0,
-        child: SizedBox(
-          height: 60,
+        notchMargin: 0.0,
+        height: 60,
+        color: Color(0xFFF6F6F6),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 24),
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              IconButton(
-                icon: const Icon(Icons.home, color: AppColors.primary),
-                onPressed: () {},
+              // Home button
+              Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  IconButton(
+                    icon: SvgPicture.asset('assets/images/home.svg'),
+                    onPressed: () {},
+                    padding: EdgeInsets.zero,
+                    visualDensity: VisualDensity.compact,
+                    //constraints: const BoxConstraints(),
+                  ),
+                  const Text(
+                    'Home',
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: AppColors.primary,
+                    ),
+                  ),
+                ],
               ),
-              const SizedBox(width: 48), // Space for FAB
-              IconButton(
-                icon: const Icon(Icons.settings, color: AppColors.grey),
-                onPressed: () {
-                  Navigator.pushNamed(context, AppRoutes.settings);
-                },
+              // Empty space for FAB
+              const SizedBox(width: 40),
+              // Settings button
+              Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  IconButton(
+                    icon: SvgPicture.asset('assets/images/settings.svg'),
+                    onPressed: () {
+                      Navigator.pushNamed(context, AppRoutes.settings);
+                    },
+                    padding: EdgeInsets.zero,
+                    visualDensity: VisualDensity.compact,
+                    //constraints: const BoxConstraints(),
+                  ),
+                  const Text(
+                    'Settings',
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: AppColors.grey,
+                    ),
+                  ),
+                ],
               ),
             ],
           ),
@@ -287,6 +313,9 @@ class _HomePageState extends ConsumerState<HomePage> {
     }
 
     final isUpcoming = trip.startDate.isAfter(DateTime.now());
+    final isOngoing =
+        trip.startDate.isBefore(DateTime.now()) &&
+        trip.endDate.isAfter(DateTime.now());
 
     return GestureDetector(
       onTap: () async {
@@ -338,11 +367,17 @@ class _HomePageState extends ConsumerState<HomePage> {
                     decoration: BoxDecoration(
                       color: isUpcoming
                           ? Colors.amber
+                          : isOngoing
+                          ? AppColors.primary
                           : const Color(0xFF8CC63F), // Green for completed
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: Text(
-                      isUpcoming ? 'Upcoming' : 'Completed',
+                      isUpcoming
+                          ? 'Upcoming'
+                          : isOngoing
+                          ? 'Ongoing'
+                          : 'Completed',
                       style: GoogleFonts.inter(
                         color: Colors.white,
                         fontSize: 12,
@@ -363,96 +398,77 @@ class _HomePageState extends ConsumerState<HomePage> {
 
               // Route visualization
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
+                  // ORIGIN
                   Expanded(
-                    flex: 2,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          trip.originAddress ?? 'Origin',
-                          style: GoogleFonts.inter(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            color: AppColors.text,
-                          ),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
+                    child: Padding(
+                      padding: const EdgeInsets.only(right: 8),
+                      child: Text(
+                        trip.originAddress?.split(',').last ?? 'Origin',
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: GoogleFonts.inter(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: AppColors.text,
                         ),
-                        Text(
-                          'From',
-                          style: GoogleFonts.inter(
-                            color: AppColors.grey,
-                            fontSize: 12,
-                          ),
-                        ),
-                      ],
+                      ),
                     ),
                   ),
-                  Expanded(
-                    flex: 3,
+
+                  // CENTER DIVIDER (fixed width)
+                  SizedBox(
+                    width: 120, // 👈 tweak this once, done forever
                     child: Column(
                       children: [
                         Row(
-                          children: [
-                            const Expanded(
+                          children: const [
+                            Expanded(
                               child: Divider(
                                 color: AppColors.secondary,
                                 thickness: 1,
-                                indent: 5,
-                                endIndent: 5,
                               ),
                             ),
-                            const Icon(
-                              Icons.flight_takeoff, // Plane icon
-                              color: AppColors.secondary,
+                            Icon(
+                              Icons.flight_takeoff,
                               size: 16,
+                              color: AppColors.secondary,
                             ),
-                            const Expanded(
+                            Expanded(
                               child: Divider(
                                 color: AppColors.secondary,
                                 thickness: 1,
-                                indent: 5,
-                                endIndent: 5,
                               ),
                             ),
                           ],
                         ),
+                        const SizedBox(height: 4),
                         Text(
                           distanceStr,
-                          textAlign: TextAlign.center,
                           style: GoogleFonts.inter(
-                            fontSize: 10,
+                            fontSize: 12,
                             color: AppColors.grey,
                           ),
                         ),
                       ],
                     ),
                   ),
+
+                  // DESTINATION
                   Expanded(
-                    flex: 2,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        Text(
-                          trip.destination,
-                          style: GoogleFonts.inter(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            color: AppColors.text,
-                          ),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 8),
+                      child: Text(
+                        trip.destination.split(',').last,
+                        textAlign: TextAlign.end,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: GoogleFonts.inter(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: AppColors.text,
                         ),
-                        Text(
-                          'To',
-                          style: GoogleFonts.inter(
-                            color: AppColors.grey,
-                            fontSize: 12,
-                          ),
-                        ),
-                      ],
+                      ),
                     ),
                   ),
                 ],
